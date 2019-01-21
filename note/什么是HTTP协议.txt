@@ -1,0 +1,4 @@
+1. 什么是HTTP协议？
+https://www.cnblogs.com/ranyonsue/p/5984001.html
+2. requests包怎么用？
+http://docs.python-requests.org/zh_CN/latest/
