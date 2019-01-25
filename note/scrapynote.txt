@@ -2,3 +2,5 @@
 https://www.cnblogs.com/ranyonsue/p/5984001.html
 2. requests包怎么用？
 http://docs.python-requests.org/zh_CN/latest/
+3. Beautifulsoup怎么用？（重点看find\find_all）
+https://www.crummy.com/software/BeautifulSoup/bs4/doc/index.zh.html#id10
