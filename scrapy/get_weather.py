@@ -1,19 +1,16 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime
+import config_para
 
+url = config_para.url
 
-#参数设置（以后写在ini文件里面）
-country = "china"
-province = "shanghai"
-city = "shanghai"
-url = "https://tianqi.moji.com/forecast7/%s/%s/%s" % (country, province, city)
 
 def get_timestamp():# 获得现在时间的时间戳，如：20190125
     now_time = datetime.datetime.now()
     return(str(now_time)[0:4] + str(now_time)[5:7] + str(now_time)[8:10])
 
-def get_weather(day_num = 7):
+def get_weather(day_num = 3):
     moji_html = requests.get(url)
     moji_html.encoding = 'utf-8'# 获取墨迹天气的html并用utf-8解码
     soup = BeautifulSoup(moji_html.content, features="html.parser")# 解析成soup
