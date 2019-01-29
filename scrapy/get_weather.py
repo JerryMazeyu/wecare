@@ -1,16 +1,24 @@
 import requests
 from bs4 import BeautifulSoup
 import datetime
-import config_para
+import configparser
 
-url = config_para.url
+conf = configparser.ConfigParser()
+conf.read_file(open('config_para.ini'))
+location = conf.get("location", "location")
+
 
 
 def get_timestamp():# 获得现在时间的时间戳，如：20190125
     now_time = datetime.datetime.now()
     return(str(now_time)[0:4] + str(now_time)[5:7] + str(now_time)[8:10])
 
-def get_weather(day_num = 3):
+def get_weather(location = location, day_num = 3):
+    weather = conf.get("url", "forecast")
+    try:
+        url = eval(weather) + eval(location)
+    except:
+        url = eval(weather) + location
     moji_html = requests.get(url)
     moji_html.encoding = 'utf-8'# 获取墨迹天气的html并用utf-8解码
     soup = BeautifulSoup(moji_html.content, features="html.parser")# 解析成soup
@@ -44,11 +52,11 @@ def get_weather(day_num = 3):
         weather_info[id] = [week_string[2 * i], week_string[2 * i + 1], wea_string[i], wea_string[i + 1], temp_low_string[i], temp_high_string[i]]
 
     weather_info.pop(str(int(get_timestamp()) - 1))
+    print("get_weather success!")
 
     return weather_info
 
 if __name__ == '__main__':
-    print(get_weather())
-    weather_info = get_weather()
+    get_weather("china/anhui/bengbu")
 
 

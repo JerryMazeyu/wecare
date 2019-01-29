@@ -1,9 +1,11 @@
 import requests
 from bs4 import BeautifulSoup
-import config_para
 import get_weather
+import configparser
 
-url = [config_para.uray, config_para.makeup, config_para.pollution]# 将url定义为配置文件中的url
+conf = configparser.ConfigParser()
+conf.read_file(open('config_para.ini'))
+location = conf.get("location", "location")
 
 def get_content(url):# 从指定url（紫外线、化妆、污染）中获取指标和建议
     moji_html = requests.get(url)
@@ -19,7 +21,19 @@ def get_content(url):# 从指定url（紫外线、化妆、污染）中获取指
 
 get_timestamp = get_weather.get_timestamp()# 引用get_weather脚本中获取时间戳的函数
 
-def main():# 将信息整合成一个字典的形式
+def main(location = location):# 将信息整合成一个字典的形式
+    uray = conf.get("url", "uray")
+    makeup = conf.get("url", "makeup")
+    pollution = conf.get("url", "pollution")
+    try:
+        uray_url = eval(uray) + eval(location)
+        makeup_url = eval(makeup) + eval(location)
+        pollution_url = eval(pollution) + eval(location)
+    except:
+        uray_url = eval(uray) + location
+        makeup_url = eval(makeup) + location
+        pollution_url = eval(pollution) + location
+    url = [uray_url, makeup_url, pollution_url]
     id = [get_timestamp, str(int(get_timestamp) + 1), str(int(get_timestamp) + 2)]
     living_info = {}
     uray_info = get_content(url[0])
@@ -27,6 +41,7 @@ def main():# 将信息整合成一个字典的形式
     pollution_info = get_content(url[2])
     for i in range(3):
         living_info[id[i]] = [uray_info[2*i:2*i+2], makeup_info[2*i:2*i+2], pollution_info[2*i:2*i+2]]
+    print("get_living_index success!")
     return living_info
 
 if __name__ == '__main__':
