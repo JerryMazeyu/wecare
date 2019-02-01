@@ -9,9 +9,18 @@ location = conf.get("location", "location")
 
 
 
-def get_timestamp():# 获得现在时间的时间戳，如：20190125
-    now_time = datetime.datetime.now()
-    return(str(now_time)[0:4] + str(now_time)[5:7] + str(now_time)[8:10])
+def get_timestamp(delta = 0):
+    today = datetime.date.today()
+    day_str = today + datetime.timedelta(days=delta)
+    return str(day_str)[0:4] + str(day_str)[5:7] + str(day_str)[8:10]
+
+def get_days(day = 3):
+    days = []
+    for i in range(day):
+        today = datetime.date.today()
+        today_str = today + datetime.timedelta(days=i)
+        days.append(str(today_str)[0:4] + str(today_str)[5:7] + str(today_str)[8:10])
+    return days
 
 def get_weather(location = location, day_num = 3):
     weather = conf.get("url", "forecast")
@@ -45,13 +54,14 @@ def get_weather(location = location, day_num = 3):
     for elements in temp_high:
         temp_high_string.append(elements.string)
 
+
     weather_info = {}# 将其整合至一个字典中
     for i in range(day_num + 1):
         year = get_timestamp()[0:4]
         id = str(year) + str(week_string[2 * i + 1])[0:2] + str(week_string[2 * i + 1])[3:5]
-        weather_info[id] = [week_string[2 * i], week_string[2 * i + 1], wea_string[i], wea_string[i + 1], temp_low_string[i], temp_high_string[i]]
+        weather_info[id] = [week_string[2 * i], week_string[2 * i + 1], wea_string[2*i], wea_string[2*i + 1], temp_low_string[i], temp_high_string[i]]
 
-    weather_info.pop(str(int(get_timestamp()) - 1))
+    weather_info.pop(get_timestamp(-1))
     print("get_weather success!")
 
     return weather_info
